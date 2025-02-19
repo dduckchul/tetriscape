@@ -40,7 +40,7 @@ AnimatorStateMachine:
     m_Position: {x: 300, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2156303817625146375}
-    m_Position: {x: 275.66824, y: 133.60077, z: 0}
+    m_Position: {x: 280, y: 130, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -80,7 +80,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "TDA Kana Arima School_arm_\u7C9B\u8056!! \u30ED\u30EA\u795E\u30EC\u30AF\u30A4\u30A8\u30E0_A\u30E1\u30ED(\u89E6\u3063\u305F\u3089\u902E_001"
+  m_Name: CossakDance
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -93,7 +93,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 641df82182cef4903bda16b5d26e2ea6, type: 2}
+  m_Motion: {fileID: 7400000, guid: a88c26d0e65b64428b702bfef18aaff6, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
