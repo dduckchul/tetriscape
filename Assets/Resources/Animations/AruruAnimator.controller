@@ -45,7 +45,7 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Lower
+    m_Name: Lower_Dance
     m_StateMachine: {fileID: 5832053325286543631}
     m_Mask: {fileID: 31900000, guid: d1a083945876345d48c50c24106f1f74, type: 2}
     m_Motions: []
@@ -115,7 +115,7 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lower
+  m_Name: Lower_Dance
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 2789833152191608792}
