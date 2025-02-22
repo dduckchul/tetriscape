@@ -108,4 +108,4 @@ MonoBehaviour:
   - {fileID: -1341804590, guid: c74b282d1af7040acab5a9ab384698ac, type: 3}
   - {fileID: 1715457282, guid: c74b282d1af7040acab5a9ab384698ac, type: 3}
   - {fileID: 531645056, guid: c74b282d1af7040acab5a9ab384698ac, type: 3}
-  _titleManager: {fileID: 0}
+  disappearSpeed: 0.1

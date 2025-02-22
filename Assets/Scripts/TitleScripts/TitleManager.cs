@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 using static GradientSkyEnum;
-using Random = UnityEngine.Random;
-
 
 public class TitleManager : MonoBehaviour
 {
@@ -25,9 +22,9 @@ public class TitleManager : MonoBehaviour
     [Header("불꽃놀이 설정")]
     public GameObject fireWorkPrefab;
     public int fireWorksPoolSize = 10;
+    public float maxRandomizeShootTime = 1f;
     private ObjectPool<GameObject> _fireWorksPool;
     
-    // Start is called before the first frame update
     void Start()
     {
         _mat = GetComponent<Renderer>().material;
@@ -41,9 +38,9 @@ public class TitleManager : MonoBehaviour
             obj => obj.SetActive(true),
             obj => obj.SetActive(false),
             obj => Destroy(obj),
-            false,
-            defaultCapacity:5,
-            maxSize:fireWorksPoolSize
+            true,
+            fireWorksPoolSize,
+            fireWorksPoolSize
         );
         
         if (_isDay)
@@ -51,7 +48,6 @@ public class TitleManager : MonoBehaviour
             StartCoroutine(ChangeToNight());
         }
     }
-    
 
     // 밤으로 바꾸는 연출, 포문 돌면서 정해진 색상으로 바꿔준다
     IEnumerator ChangeToNight()
@@ -70,7 +66,7 @@ public class TitleManager : MonoBehaviour
             GradientSkyEnum bottomColorEnum = (GradientSkyEnum)i;
             Color bottomToChange = GradientSky.EnumToColor(bottomColorEnum);            
             
-            for (float t = 0; t < 1; t += Time.deltaTime)
+            for (float t = 0; t < 1; t += Time.deltaTime * 2)
             {
                 _mat.SetColor(_topColor, Color.Lerp(topBefore, topToChange, t));
                 _mat.SetColor(_middleColor, Color.Lerp(midBefore, midToChange, t));
@@ -90,10 +86,14 @@ public class TitleManager : MonoBehaviour
     // 불꽃 놀이 쏘기
     IEnumerator ShootFireWorks()
     {
-        for(int i = 0; i < 20; i++)
-        {        
-            _fireWorksPool.Get();
-            yield return null;
+        while (!_isDay)
+        {
+            int randomToShoot = Random.Range(1, 5);
+            for(int i = 0; i < randomToShoot; i++)
+            {        
+                _fireWorksPool.Get();
+                yield return new WaitForSeconds(Random.Range(0, maxRandomizeShootTime));
+            }
         }
     }
 

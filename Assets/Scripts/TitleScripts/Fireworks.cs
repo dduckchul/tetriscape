@@ -6,11 +6,12 @@ using Random = UnityEngine.Random;
 public class Fireworks : MonoBehaviour
 {
     public Sprite[] fireWorkSprites;
+    // 불꽃놀이 사라지는 속도
+    public float disappearSpeed = 0.1f;
+    
     private ObjectPool<GameObject> _pool;
     private SpriteRenderer _sRenderer;
-
-    private float _disapperSpped = 0.2f;
-
+    
     public void SetPool(ObjectPool<GameObject> pool)
     {
         _pool = pool;
@@ -33,6 +34,7 @@ public class Fireworks : MonoBehaviour
         // 잘보이게 원색계열로 설정
         float randColorR = Random.value > 0.5f ? 1 : 0;
         float randColorG = Random.value > 0.5f ? 1 : 0;
+        
         // 검은색은 싫으니까 둘다 0이면 무조건 1로 바꿔준다.
         float randColorB = randColorR == 0 && randColorG == 0 ? 1 : (Random.value > 0.5f ? 1 : 0);
         
@@ -51,7 +53,7 @@ public class Fireworks : MonoBehaviour
             _sRenderer.sprite = fireWorkSprites[i];
             yield return new WaitForSeconds(0.1f);
         }
-        
+
         StartCoroutine(Disappear());
     }
 
@@ -60,12 +62,17 @@ public class Fireworks : MonoBehaviour
         Color origin = _sRenderer.color;
         Color removedAlpha = new Color(origin.r, origin.g, origin.b, 0);
         
-        for(float alpha = 0; alpha < 1; alpha += _disapperSpped)
+        for(float alpha = 0; alpha < 1; alpha += disappearSpeed)
         {
             _sRenderer.color = Color.Lerp(origin, removedAlpha, alpha);
             yield return new WaitForFixedUpdate();
         }
         
         _pool.Release(gameObject);
+    }
+    
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }
