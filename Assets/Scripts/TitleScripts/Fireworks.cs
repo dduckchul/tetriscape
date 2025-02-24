@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -11,18 +12,22 @@ public class Fireworks : MonoBehaviour
     
     private ObjectPool<GameObject> _pool;
     private SpriteRenderer _sRenderer;
-    
-    public void SetPool(ObjectPool<GameObject> pool)
-    {
-        _pool = pool;
-    }
-    
-    private void Start()
+
+    private void Awake()
     {
         _sRenderer = GetComponent<SpriteRenderer>();
-        SetRandomValues();
-        StartCoroutine(Shoot());
     }
+    
+    private void OnEnable()
+    {
+        SetRandomValues();
+        StartCoroutine(Shoot());        
+    }
+    
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }    
 
     // 각종 수치 랜덤하게 초기화 설정
     public void SetRandomValues()
@@ -67,12 +72,11 @@ public class Fireworks : MonoBehaviour
             _sRenderer.color = Color.Lerp(origin, removedAlpha, alpha);
             yield return new WaitForFixedUpdate();
         }
-        
         _pool.Release(gameObject);
     }
     
-    private void OnDisable()
+    public void SetPool(ObjectPool<GameObject> pool)
     {
-        StopAllCoroutines();
-    }
+        _pool = pool;
+    }    
 }
