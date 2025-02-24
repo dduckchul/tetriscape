@@ -13,6 +13,12 @@ public class TitleManager : MonoBehaviour
     private readonly string _middleColor = "_MiddleColor";
     private readonly string _bottomColor = "_BottomColor";
     
+    private Coroutine _changeToNightCorountine;
+    private Coroutine _shootFireWorksCorountine;
+    private Coroutine _showTitleCoroutine;
+
+    private bool _isLoading = false;
+    
     public float skyChangeTime = 0.1f;
     
     [Header("타이틀 설정")]
@@ -22,12 +28,25 @@ public class TitleManager : MonoBehaviour
     [Header("불꽃놀이 설정")]
     public GameObject fireWorkPrefab;
     public int fireWorksPoolSize = 10;
+    // 최대 다음 불꽃놀이 발사 될때까지 걸리는 시간
     public float maxRandomizeShootTime = 1f;
     private ObjectPool<GameObject> _fireWorksPool;
+
+    [Header("로딩 애니메이션 설정")]
+    public GameObject aruru;
+    public GameObject screen;
+    private SceneChanger _sceneChanger;
+    [SerializeField] private int _seenTitle; 
+    
+    void Awake()
+    {
+        _seenTitle = PlayerPrefs.GetInt("seenTitle", 0);
+    }
     
     void Start()
     {
         _mat = GetComponent<Renderer>().material;
+        _sceneChanger = screen.GetComponent<SceneChanger>();
         _fireWorksPool = new ObjectPool<GameObject>(
             () =>
             {
@@ -45,7 +64,7 @@ public class TitleManager : MonoBehaviour
         
         if (_isDay)
         {
-            StartCoroutine(ChangeToNight());
+            _changeToNightCorountine = StartCoroutine(ChangeToNight());
         }
     }
 
@@ -76,11 +95,15 @@ public class TitleManager : MonoBehaviour
             
             yield return new WaitForSeconds(skyChangeTime);
         }
+
+        PlayerPrefs.SetInt("seenTitle", 1);
+        PlayerPrefs.Save();
+
+        _seenTitle = PlayerPrefs.GetInt("seenTitle");
         
         _isDay = false;
-        
-        StartCoroutine(ShowTitle());
-        StartCoroutine(ShootFireWorks());
+        _showTitleCoroutine = StartCoroutine(ShowTitle());
+        _shootFireWorksCorountine = StartCoroutine(ShootFireWorks());
     }
 
     // 불꽃 놀이 쏘기
@@ -109,4 +132,97 @@ public class TitleManager : MonoBehaviour
     }
     
     // 시간 되면 낮 -> 밤 연출도 생각해보기
+    IEnumerator ChangeToDay()
+    {
+        Color32 nightBottom = GradientSky.EnumToColor(LightBlack);
+        Color32 nightMid = GradientSky.EnumToColor(DarkBlack);
+        Color32 nightTop = GradientSky.EnumToColor(Black);
+
+        Color32 dayBottom = GradientSky.EnumToColor(DarkWhite);
+        Color32 dayMid = GradientSky.EnumToColor(LightBlue);
+        Color32 dayTop = GradientSky.EnumToColor(SkyBlue);
+        
+        if (!_isDay)
+        {
+            StopCoroutine(_shootFireWorksCorountine);
+
+            for (float t = 0; t < 1; t += Time.deltaTime * 2)
+            {
+                _mat.SetColor(_topColor, Color.Lerp(nightTop, dayTop, t));
+                _mat.SetColor(_middleColor, Color.Lerp(nightMid, dayMid, t));
+                _mat.SetColor(_bottomColor, Color.Lerp(nightBottom, dayBottom, t));
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
+        if (_isDay && _changeToNightCorountine != null)
+        {
+            // 중간에 키 눌렸을때 코루틴 멈추고 바로 로딩 & 시작화면으로
+            StopCoroutine(_changeToNightCorountine);
+
+            if (_shootFireWorksCorountine != null)
+            {
+                StopCoroutine(_shootFireWorksCorountine);                
+            }
+
+            if(_showTitleCoroutine != null)
+            {
+                StopCoroutine(_showTitleCoroutine);
+            }
+
+            _mat.SetColor(_topColor, dayTop);
+            _mat.SetColor(_middleColor, dayMid);
+            _mat.SetColor(_bottomColor, dayBottom);
+            
+            titleText.faceColor = new Color(titleText.faceColor.r, titleText.faceColor.g, titleText.faceColor.b, 1);
+        }
+    }
+
+    private void GameStart()
+    {
+        StartCoroutine(_sceneChanger.Loading(SceneEnum.TestScene));
+        StartCoroutine(ChangeToDay());
+        StartCoroutine(ActiveAruru());
+    }
+
+    // 일단 불꽃놀이 한번 봐야 다음 부터 시작 가능
+    private void OnStartGame()
+    {
+        if (_seenTitle == 1 && _isLoading == false)
+        {
+            _isLoading = true;
+            GameStart();
+        }
+    }
+
+    IEnumerator ActiveAruru()
+    {
+        aruru.GetComponent<Animator>().SetBool("isRun", true);
+        aruru.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(MoveAruru());
+    }
+
+    IEnumerator MoveAruru()
+    {
+        bool isAruruMiddle = false;
+
+        while (aruru.transform.position.x < 15)
+        {
+            aruru.transform.position += new Vector3(0.15f, 0, 0);
+            yield return new WaitForFixedUpdate();
+
+            if (aruru.transform.position.x > 0 && !isAruruMiddle)
+            {
+                isAruruMiddle = true;
+                aruru.GetComponent<Animator>().SetTrigger("triggerLookBack");
+                for(float wait = 0 ; wait < 1.5; wait += Time.deltaTime)
+                {
+                    yield return new WaitForFixedUpdate();
+                }
+            }
+        }
+
+        _sceneChanger.activateScene = true;
+    }
 }
