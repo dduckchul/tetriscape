@@ -59,12 +59,12 @@ public class BlockFactory : MonoBehaviour
     {
         BlockEnum randomBlock = (BlockEnum)Random.Range((int)BlockEnum.IBlock, (int)BlockEnum.BlockEnd);
         // 특정 블록으로 테스트하기
-        // randomBlock = BlockEnum.SquareBlock;
+        randomBlock = BlockEnum.IBlock;
         BlockColor blockColor = BlockUtility.BlockToColor(randomBlock);
         GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(randomBlock));
+
         Block block = blockObj.GetComponent<Block>();
         block.InitBlock(randomBlock, blockColor, pos);
-
         return block;
     }
     
@@ -74,14 +74,14 @@ public class BlockFactory : MonoBehaviour
         BlockEnum blockEnum = sequentialBlocks.blocks[_sequentialIndex++];
         BlockColor blockColor = BlockUtility.BlockToColor(blockEnum);
         GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(blockEnum));
-        Block block = blockObj.GetComponent<Block>();
-        block.InitBlock(blockEnum, blockColor, pos);
-        
+
         if(_sequentialIndex >= sequentialBlocks.blocks.Length)
         {
             _sequentialIndex = 0;
         }
-
+        
+        Block block = blockObj.GetComponent<Block>();
+        block.InitBlock(blockEnum, blockColor, pos);
         return block;
     }
 }
