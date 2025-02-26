@@ -1,7 +1,8 @@
 using System.Collections;
+using UnityEngine;
 
 public interface IMoveable
 {
     IEnumerator Fall();
-    void Move();
+    void Move(Vector2 dir);
 }

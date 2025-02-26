@@ -2,39 +2,34 @@ using UnityEngine;
 
 public class BlockUtility
 {
-    public static string EnumToPrefab(BlockEnum blockEnum)
+    public static GameObject EnumToPrefab(BlockEnum blockEnum)
     {
-        string prefabName;
+        string prefabName = "Prefabs/Blocks/" + blockEnum;
+        GameObject prefab = Resources.Load<GameObject>(prefabName);
+        
+        if(prefab == null)
+        {
+            Debug.LogError(blockEnum + "프리팹이 없습니다 ㅠㅠ");
+            return null;
+        }
+        
+        return prefab; 
+    }
+
+    public static BlockColor BlockToColor(BlockEnum blockEnum)
+    {
         switch (blockEnum)
         {
-            case BlockEnum.IBlock :
-                prefabName = "Prefabs/IBlock";
-                break;
-            case BlockEnum.LBlock :
-                prefabName = "Prefabs/LBlock";
-                break;
-            case BlockEnum.RLBlock :
-                prefabName = "Prefabs/RLBlock";
-                break;
-            case BlockEnum.RZBlock:
-                prefabName = "Prefabs/SBlock";
-                break;
-            case BlockEnum.SqaureBlock :
-                prefabName = "Prefabs/SquareBlock";
-                break;                
-            case BlockEnum.TBlock :
-                prefabName = "Prefabs/TBlock";
-                break;
-            case BlockEnum.ZBlock :
-                prefabName = "Prefabs/ZBlock";
-                break;
-            default : 
-                Debug.Log("Error : BlockEnum is not valid");
-                prefabName = "";
-                break;
+            case BlockEnum.IBlock : return BlockColor.LightRed;
+            case BlockEnum.LBlock : return BlockColor.LightGreen;
+            case BlockEnum.RLBlock : return BlockColor.Blue;
+            case BlockEnum.RZBlock : return BlockColor.LightYellow;
+            case BlockEnum.SquareBlock : return BlockColor.LightPurple;
+            case BlockEnum.TBlock : return BlockColor.SkyBlue;
+            case BlockEnum.ZBlock : return BlockColor.LightBlue;
+            default : return BlockColor.LightGray;
         }
-        return prefabName;
-    } 
+    }
     
     public static Color EnumToColor(BlockColor enumColor)
     {

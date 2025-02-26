@@ -219,6 +219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4136849587456904556}
+  - component: {fileID: -2728709179122932979}
   m_Layer: 7
   m_Name: RZBlock
   m_TagString: Untagged
@@ -245,6 +246,19 @@ Transform:
   - {fileID: 7180676860272150010}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2728709179122932979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3571192511468772163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c408d0fdfe346fc8c8156fd1028c3e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockMaterial: {fileID: 2100000, guid: cd36c5ffded114ad896a708fe1367a2a, type: 2}
 --- !u!1 &4852259462393346797
 GameObject:
   m_ObjectHideFlags: 0

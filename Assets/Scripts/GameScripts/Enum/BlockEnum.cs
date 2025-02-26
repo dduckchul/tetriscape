@@ -1,7 +1,7 @@
 /* 프리팹으로 저장해둔 블록들*/ 
 public enum BlockEnum
 {
-    IBlock, LBlock, RLBlock, RZBlock, SqaureBlock, TBlock, ZBlock, BlockEnd
+    IBlock, LBlock, RLBlock, RZBlock, SquareBlock, TBlock, ZBlock, BlockEnd
 }
 
 
