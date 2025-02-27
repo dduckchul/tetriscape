@@ -59,7 +59,7 @@ public class BlockFactory : MonoBehaviour
     {
         BlockEnum randomBlock = (BlockEnum)Random.Range((int)BlockEnum.IBlock, (int)BlockEnum.BlockEnd);
         // 특정 블록으로 테스트하기
-        randomBlock = BlockEnum.IBlock;
+        // randomBlock = BlockEnum.LBlock;
         BlockColor blockColor = BlockUtility.BlockToColor(randomBlock);
         GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(randomBlock));
 

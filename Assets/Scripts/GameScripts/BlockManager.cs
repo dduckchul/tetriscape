@@ -18,34 +18,37 @@ public class BlockManager : MonoBehaviour
     private bool _useSwap = false;
     private Vector3 _spawnPos;
     private Vector3 _holdPos;
+    private Vector3 _nextPos;
     
     private void Start()
     {
         _blockQueue = new Queue<Block>();
         _blockFactory = blockFactoryObj.GetComponent<BlockFactory>();
         _spawnPos = new Vector3(0, blockFactoryObj.transform.position.y, 0);
-        _holdPos = new Vector3(-4, 8, 0);
+        _holdPos = new Vector3(-10, 14, 0);
+        _nextPos = new Vector3(10, 14, 0);
 
         InitBlockQueue();
         Dequeue();
         
         // 일단 여기다 넣읍시다, 잠시후 출발할거임
-        Invoke("ControlBlock", 1f);
+        Invoke("StartCurrentBlock", 1f);
     }
     
     private void InitBlockQueue()
     {
         _blockQueue.Clear();
         
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 2; i++)
         {
-            _blockQueue.Enqueue(_blockFactory.CreateBlock(_spawnPos));
+            _blockQueue.Enqueue(_blockFactory.CreateBlock(_nextPos));
         }
     }
     
-    private void ControlBlock()
+    private void StartCurrentBlock()
     {
         _currentBlock.isCurrent = true;
+        _currentBlock.transform.position = _spawnPos;
         _currentBlock.StartBlock(fallSpeed);
         _currentBlock.OnBlockFinishedEvents += ControlFinished;
     }
@@ -74,7 +77,7 @@ public class BlockManager : MonoBehaviour
         if (_currentBlock == null)
         {
             Dequeue();
-            ControlBlock();
+            StartCurrentBlock();
         }
         else
         {
@@ -92,9 +95,9 @@ public class BlockManager : MonoBehaviour
             return;
         }
         
-        for(int i = 0; i < 1; i++)
+        for(int i = 0; i < 2; i++)
         {
-            _blockQueue.Enqueue(_blockFactory.CreateBlock(_spawnPos));
+            _blockQueue.Enqueue(_blockFactory.CreateBlock(_nextPos));
         }
     }    
     
@@ -102,6 +105,7 @@ public class BlockManager : MonoBehaviour
     {
         Block block = _blockQueue.Dequeue();
         _currentBlock = block;
+        _currentBlock.rigidBody.isKinematic = false;
     }
 
     // 스왑 눌렀을때 실행
@@ -122,6 +126,6 @@ public class BlockManager : MonoBehaviour
         _currentBlock.OnBlockFinishedEvents -= ControlFinished;
         EnqueueSomeBlocks();
         Dequeue();
-        ControlBlock();
+        StartCurrentBlock();
     }
 }

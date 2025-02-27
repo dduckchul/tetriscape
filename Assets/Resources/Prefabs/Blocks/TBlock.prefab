@@ -366,6 +366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isCurrent: 0
   isFixed: 0
+  rigidBody: {fileID: 7611427563265388087}
   blockMaterial: {fileID: 2100000, guid: c80febd5b683647d2ae0ddc4e7845969, type: 2}
 --- !u!54 &7611427563265388087
 Rigidbody:
@@ -390,7 +391,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0

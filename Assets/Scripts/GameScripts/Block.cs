@@ -18,7 +18,7 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
     private bool _lastMove;
     private float _fallSpeed;
     
-    private Rigidbody _rigidBody;
+    public Rigidbody rigidBody;
     public Material blockMaterial;
 
     public BlockEnum BlockType => _blockType;
@@ -29,11 +29,6 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
 
     public event Action OnBlockFinishedEvents;
     
-    private void Start()
-    {
-        _rigidBody = GetComponent<Rigidbody>();
-    }
-
     // 초기 블록 세팅, 1. 위치, 2. 색상, 3. 떨어지는 속도
     public void InitBlock(BlockEnum blockEnum, BlockColor blockColor, Vector3 pos)
     {
@@ -92,21 +87,46 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
 
     public void OnCollisionEnter(Collision other)
     {
-        Block block = other.gameObject.GetComponent<Block>();
+        if (!isCurrent)
+        {
+            return;
+        }
+        
+        Block otherBlock = other.gameObject.GetComponent<Block>();
+
+        if (otherBlock == null)
+        {
+            return;
+        }
+        
+        Vector3 otherBlockPos = otherBlock.transform.position;
+        Vector3 myBlockPos = transform.position;
+        
+        Debug.Log(otherBlockPos);
+        Debug.Log(myBlockPos);
         
         // 고정된 블럭에 부딛혔다.
-        if (block != null && block.isFixed)
+        if (otherBlock.isFixed)
         {
             _lastMove = true;
             StopBlock();
-            _rigidBody.isKinematic = true;
+            rigidBody.isKinematic = true;
             float roundedX = Mathf.Round(transform.position.x);
             float roundedY = Mathf.Round(transform.position.y);
             transform.position = new Vector3(roundedX, roundedY, 0);
             _rotateCoroutine = StartCoroutine(WaitForLastRotate());
         }
     }
-    
+
+    private void OnCollisionStay(Collision other)
+    {
+        if (!isCurrent)
+        {
+            return;
+        }
+        Debug.Log("나 계속 있는중");
+    }
+
     IEnumerator WaitForLastRotate()
     {
         for(float t = 0; t < _lastRotateTime; t += Time.deltaTime)
