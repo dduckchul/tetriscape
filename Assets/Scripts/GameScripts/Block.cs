@@ -223,6 +223,7 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
         }
     }
 
+    // To-Do T스핀 위해 잠시 대기, 구현 가능하면 다시 해보기
     // IEnumerator WaitForLastRotate()
     // {
     //     for(float t = 0; t < _lastRotateTime; t += Time.deltaTime)

@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -139,6 +137,8 @@ public class BlockManager : MonoBehaviour
         _holdBlock = temp;
     }
     
+    // 조작 끝나면 확인할 것들
+    // 이벤트 바인딩 해제, 스왑 플래그 돌리기, 게임오버확인, 줄삭제, 블럭 큐잉, 다음 블럭 시작 
     private void ControlFinished()
     {
         _currentBlock.OnBlockFinishedEvents -= ControlFinished;
@@ -156,7 +156,8 @@ public class BlockManager : MonoBehaviour
         StartCurrentBlock();
     }
 
-    // 마지막으로 
+
+    // 마지막 블럭이 데드존과 충돌했는지 확인
     private bool CheckToGameOver()
     {
         Collider[] colliders = _currentBlock.transform.GetComponentsInChildren<Collider>();
@@ -172,6 +173,7 @@ public class BlockManager : MonoBehaviour
         return false;
     }
 
+    // 게임 오버, 와장창!
     IEnumerator GameOver()
     {
         foreach (GameObject env in environments)
@@ -189,12 +191,12 @@ public class BlockManager : MonoBehaviour
             blockRigid.constraints = RigidbodyConstraints.FreezePositionZ;
         }
         
-        environments[0].GetComponent<Rigidbody>().AddExplosionForce(20, Vector3.zero, 10, 1, ForceMode.Impulse);
+        environments[0].GetComponent<Rigidbody>().AddExplosionForce(100, Vector3.zero, 10, 10, ForceMode.Impulse);
 
         yield return null;
     }
     
-    // 한 줄만큼 콜라이더가 차있으면 라인 없에기
+    // 지울 라인 확인하기, 자식이 없는 블록들 있으면 탐색 위해 디스트로이
     private void CheckToRemoveLine()
     {
         _collidersDict.Clear();
@@ -218,6 +220,7 @@ public class BlockManager : MonoBehaviour
         StartCoroutine(DestroyNonChildBlocks());
     }
 
+    // 라인 지우기
     private void RemoveLine()
     {
         if (_collidersDict.Count == 0)
@@ -277,6 +280,7 @@ public class BlockManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
     }
     
+    // 디버그용 기즈모 그리기
     private void OnDrawGizmos()
     {
         // if (_currentBlock == null)
