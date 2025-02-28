@@ -241,17 +241,25 @@ public class BlockManager : MonoBehaviour
     {
         foreach (Block block in blockParent.GetComponentsInChildren<Block>())
         {
+            if (!block.isFixed)
+            {
+                continue;
+            }
+            
             for (int i = 0; i < block.transform.childCount; i++)
             {
-                int count = 1;
+                int downCount = 0;
                 Transform child = block.transform.GetChild(i);
+                
+                int tempPosY = Mathf.RoundToInt(child.position.y);
                 foreach (int key in _collidersDict.Keys)
                 {
-                    if (Mathf.RoundToInt(child.position.y) > key)
+                    if (tempPosY > key)
                     {
-                        child.position += Vector3.down * count++;     
+                        downCount++;
                     }
                 }
+                child.position += Vector3.down * downCount;
             }
         }
     }
