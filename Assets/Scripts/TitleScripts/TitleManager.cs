@@ -180,7 +180,7 @@ public class TitleManager : MonoBehaviour
 
     private void GameStart()
     {
-        StartCoroutine(_sceneChanger.Loading(SceneEnum.TestScene));
+        StartCoroutine(_sceneChanger.Loading(SceneEnum.MainScene));
         StartCoroutine(ChangeToDay());
         StartCoroutine(ActiveAruru());
     }
