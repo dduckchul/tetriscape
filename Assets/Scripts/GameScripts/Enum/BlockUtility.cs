@@ -64,52 +64,52 @@ public class BlockUtility
         return color;        
     }
 
-    public static Vector2 [] BlockToRelativeBlock(BlockEnum blockEnum)
+    public static Vector3 [] EnumToRelativeBlockPos(BlockEnum blockEnum)
     {
-        Vector2[] blocksPos = new Vector2[4]; 
+        Vector3[] blocksPos = new Vector3[4]; 
         switch (blockEnum)
         {
             case BlockEnum.IBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(0, 1);
-                blocksPos[2] = new Vector2(0, 2);
-                blocksPos[3] = new Vector2(0, 3);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(0, 1);
+                blocksPos[2] = new Vector3(0, 2);
+                blocksPos[3] = new Vector3(0, 3);
                 break;
             case BlockEnum.LBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(0, 1);
-                blocksPos[2] = new Vector2(0, 2);
-                blocksPos[3] = new Vector2(1, 0);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(0, 1);
+                blocksPos[2] = new Vector3(0, 2);
+                blocksPos[3] = new Vector3(1, 0);
                 break;
             case BlockEnum.RLBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(1, 0);
-                blocksPos[2] = new Vector2(1, 1);
-                blocksPos[3] = new Vector2(2, 1);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(0, 1);
+                blocksPos[2] = new Vector3(0, 2);
+                blocksPos[3] = new Vector3(-1, 0);
                 break;
             case BlockEnum.RZBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(0, 1);
-                blocksPos[2] = new Vector2(1, 1);
-                blocksPos[3] = new Vector2(1, 2);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(1, 0);
+                blocksPos[2] = new Vector3(1, 1);
+                blocksPos[3] = new Vector3(2, 1);
                 break;
             case BlockEnum.SquareBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(1, 0);
-                blocksPos[2] = new Vector2(0, 1);
-                blocksPos[3] = new Vector2(1, 1);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(1, 0);
+                blocksPos[2] = new Vector3(0, 1);
+                blocksPos[3] = new Vector3(1, 1);
                 break;
             case BlockEnum.TBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(0, 1);
-                blocksPos[2] = new Vector2(-1, 1);
-                blocksPos[3] = new Vector2(1, 1);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(0, 1);
+                blocksPos[2] = new Vector3(-1, 1);
+                blocksPos[3] = new Vector3(1, 1);
                 break;
             case BlockEnum.ZBlock :
-                blocksPos[0] = new Vector2(0, 0);
-                blocksPos[1] = new Vector2(-1, 0);
-                blocksPos[2] = new Vector2(-1, 1);
-                blocksPos[3] = new Vector2(-2, 1);
+                blocksPos[0] = new Vector3(0, 0);
+                blocksPos[1] = new Vector3(-1, 0);
+                blocksPos[2] = new Vector3(-1, 1);
+                blocksPos[3] = new Vector3(-2, 1);
                 break;
         }
         return blocksPos;

@@ -78,6 +78,7 @@ public class BlockManager : MonoBehaviour
         {
             Dequeue();
             StartCurrentBlock();
+            _holdBlock.transform.position = _holdPos;
         }
         else
         {

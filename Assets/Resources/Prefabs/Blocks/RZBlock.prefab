@@ -103,7 +103,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1760999693022561726
 GameObject:
@@ -208,7 +208,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3571192511468772163
 GameObject:
@@ -259,8 +259,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c408d0fdfe346fc8c8156fd1028c3e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _relativeBlockPos: []
   isCurrent: 0
   isFixed: 0
+  isCollide: 0
   rigidBody: {fileID: 4531736349067664229}
   blockMaterial: {fileID: 2100000, guid: cd36c5ffded114ad896a708fe1367a2a, type: 2}
 --- !u!54 &4531736349067664229
@@ -288,7 +290,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &4852259462393346797
 GameObject:
@@ -393,7 +395,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8014110737935770215
 GameObject:
@@ -498,5 +500,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}

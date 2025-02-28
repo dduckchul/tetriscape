@@ -49,8 +49,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c408d0fdfe346fc8c8156fd1028c3e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _relativeBlockPos: []
   isCurrent: 0
   isFixed: 0
+  isCollide: 0
   rigidBody: {fileID: -1159363382559587726}
   blockMaterial: {fileID: 2100000, guid: bbadf15a098224b0aa7bfcfc192df05d, type: 2}
 --- !u!54 &-1159363382559587726
@@ -78,7 +80,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &3787028967440012253
 GameObject:
@@ -183,7 +185,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6463079105184747699
 GameObject:
@@ -288,7 +290,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6623306614223689443
 GameObject:
@@ -393,7 +395,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8562369344902925234
 GameObject:
@@ -498,5 +500,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
