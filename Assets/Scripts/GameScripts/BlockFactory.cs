@@ -12,6 +12,7 @@ public enum FactoryType
 public class BlockFactory : MonoBehaviour
 {
     private int _sequentialIndex = 0;
+    public GameObject blockParent;
     // 랜덤으로 생성할지, 정해진 순서대로 생성할지
     [SerializeField] private FactoryType _factoryType;
     // 정해진 순서에 따라 생성시 참조할 스크립터블 오브젝트 파일
@@ -63,7 +64,7 @@ public class BlockFactory : MonoBehaviour
         BlockColor blockColor = BlockUtility.BlockToColor(randomBlock);
         Vector3[] relativeBlockPos = BlockUtility.EnumToRelativeBlockPos(randomBlock);
 
-        GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(randomBlock));
+        GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(randomBlock), blockParent.transform);
         Block block = blockObj.GetComponent<Block>();
         block.InitBlock(randomBlock, blockColor, pos, relativeBlockPos);
         return block;
@@ -75,7 +76,7 @@ public class BlockFactory : MonoBehaviour
         BlockEnum blockEnum = sequentialBlocks.blocks[_sequentialIndex++];
         BlockColor blockColor = BlockUtility.BlockToColor(blockEnum);
         Vector3[] relativeBlockPos = BlockUtility.EnumToRelativeBlockPos(blockEnum);
-        GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(blockEnum));
+        GameObject blockObj = Instantiate(BlockUtility.EnumToPrefab(blockEnum), blockParent.transform);
 
         if(_sequentialIndex >= sequentialBlocks.blocks.Length)
         {

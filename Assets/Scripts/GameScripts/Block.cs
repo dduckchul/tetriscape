@@ -215,7 +215,6 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
         // 고정된 블럭에 부딛혔다.
         if (otherBlock.isFixed)
         {
-            // Debug.Log("충돌위치 " + transform.position + "뭔가 충돌! : " + other.gameObject.name);
             _lastMove = true;
             StopBlock();
             ToIntPosition();
