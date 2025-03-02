@@ -68,18 +68,18 @@ public class BlockManager : MonoBehaviour
         _currentBlock.OnBlockFinishedEvents += ControlFinished;
     }
     
-    private void OnBlockMove(InputValue value)
+    public void OnBlockMove(InputValue value)
     {
         Vector2 dir = value.Get<Vector2>();
         _currentBlock.Move(dir);
     }
 
-    private void OnBlockSpin()
+    public void OnBlockSpin()
     {
         _currentBlock.Rotate();
     }
 
-    private void OnBlockHold()
+    public void OnBlockHold()
     {
         if (_useSwap)
         {

@@ -36,15 +36,18 @@ public class TitleManager : MonoBehaviour
     public GameObject aruru;
     public GameObject screen;
     private SceneChanger _sceneChanger;
-    [SerializeField] private int _seenTitle; 
+    [SerializeField] private int _seenTitle;
+    private Animator _animator;
     
     void Awake()
     {
         _seenTitle = PlayerPrefs.GetInt("seenTitle", 0);
+        _animator = aruru.GetComponent<Animator>();
     }
     
     void Start()
     {
+        _animator.SetBool("IsRun", true);
         _mat = GetComponent<Renderer>().material;
         _sceneChanger = screen.GetComponent<SceneChanger>();
         _fireWorksPool = new ObjectPool<GameObject>(
@@ -197,8 +200,6 @@ public class TitleManager : MonoBehaviour
 
     IEnumerator ActiveAruru()
     {
-        aruru.GetComponent<Animator>().SetBool("isRun", true);
-        aruru.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(MoveAruru());
     }
@@ -215,7 +216,7 @@ public class TitleManager : MonoBehaviour
             if (aruru.transform.position.x > 0 && !isAruruMiddle)
             {
                 isAruruMiddle = true;
-                aruru.GetComponent<Animator>().SetTrigger("triggerLookBack");
+                _animator.SetTrigger("triggerLookBack");
                 for(float wait = 0 ; wait < 1.5; wait += Time.deltaTime)
                 {
                     yield return new WaitForFixedUpdate();

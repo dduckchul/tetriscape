@@ -2929,7 +2929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8629823287489494215, guid: 280c0cbab2c09465c8dedf2158574504, type: 3}
       propertyPath: m_Name
-      value: Aruru Variant
+      value: AruruInGame
       objectReference: {fileID: 0}
     - target: {fileID: 8629823287489494215, guid: 280c0cbab2c09465c8dedf2158574504, type: 3}
       propertyPath: m_IsActive
@@ -2964,9 +2964,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8629823287489494215, guid: 280c0cbab2c09465c8dedf2158574504, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9026866733442069002}
-    - targetCorrespondingSourceObject: {fileID: 8629823287489494215, guid: 280c0cbab2c09465c8dedf2158574504, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2552754834969944837}
     - targetCorrespondingSourceObject: {fileID: 7302348668707072048, guid: 280c0cbab2c09465c8dedf2158574504, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1966733052049842939}
@@ -3400,7 +3397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RigLayers:
   - m_Rig: {fileID: 4959104505092357347}
-    m_Active: 1
+    m_Active: 0
   - m_Rig: {fileID: 5660270568334283282}
     m_Active: 0
   - m_Rig: {fileID: 8837346461901761160}
@@ -3412,29 +3409,6 @@ MonoBehaviour:
   - m_Rig: {fileID: 4309708451201141976}
     m_Active: 1
   m_Effectors: []
---- !u!136 &2552754834969944837
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7224985681287688211}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 10
-  m_Height: 50
-  m_Direction: 1
-  m_Center: {x: 0, y: 25, z: 0}
 --- !u!4 &7244525863865843092 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8579002559874838848, guid: 280c0cbab2c09465c8dedf2158574504, type: 3}
