@@ -15,10 +15,9 @@ public class PlayerController : MonoBehaviour
     private Animator _3dAnimator;
     
     private Coroutine _moveCoroutine;
-    private PlayerInput _playerInput;
-    private InputAction _moveAction;
     
     public float moveSpeed = 1.0f;
+    private PlayerInput _playerInput;
 
     private void Awake()
     {
@@ -43,29 +42,34 @@ public class PlayerController : MonoBehaviour
         }
         
         _playerInput = GetComponent<PlayerInput>();
-        _moveAction = _playerInput.actions.FindActionMap("Player").FindAction("Move");
-    }
-    
-    private void OnEnable()
-    {
-        _moveAction.canceled += OnMoveCanceled;
-    }
-
-    private void OnDisable()
-    {
-        _moveAction.canceled -= OnMoveCanceled;
+        _playerInput.actions.FindActionMap("Player").Enable();
     }
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
         Vector2 moveInput = ctx.ReadValue<Vector2>();
+        
         if (moveInput.y > 0)
         {
             return;
         }
         
         Vector3 moveVector = new Vector3(moveInput.x, 0, 0);
-        _moveCoroutine = StartCoroutine(MovePlayer(moveVector));            
+        if (_moveCoroutine == null)
+        {
+            _moveCoroutine = StartCoroutine(MovePlayer(moveVector));  
+            StartCoroutine(StartAnimation("IsWalk"));
+        }
+    }
+    
+    public void OnMoveCanceled(InputAction.CallbackContext ctx)
+    {
+        if (ctx.canceled && _moveCoroutine != null)
+        {
+            StartCoroutine(StopAnimation("IsWalk"));
+            StopCoroutine(_moveCoroutine);
+            _moveCoroutine = null;
+        }
     }
 
     public void OnJump()
@@ -77,7 +81,16 @@ public class PlayerController : MonoBehaviour
     {
         
     }
-    
+
+    public void OnCollisionEnter(Collision other)
+    {
+        Block block = other.gameObject.GetComponent<Block>();
+        if (block?.isCurrent == true)
+        {
+            Debug.Log("Game Over");
+        }
+    }
+
     private Animator GetAnimator()
     {
         return _isTwoDemensional ? _2dAnimator : _3dAnimator;
@@ -85,43 +98,22 @@ public class PlayerController : MonoBehaviour
     
     IEnumerator MovePlayer(Vector3 move)
     {
-        StartCoroutine(StartAnimation("IsWalk"));
         while (true)
         {
             transform.position += move * (moveSpeed * Time.deltaTime);
             yield return null;
         }
     }
-    
-    private void OnMoveCanceled(InputAction.CallbackContext context)
-    {
-        // 이동 코루틴 실행중이라면 중지
-        if (_moveCoroutine != null)
-        {
-            StartCoroutine(StopAnimation("IsWalk"));
-            StopCoroutine(_moveCoroutine);
-            _moveCoroutine = null;
-            
-            Debug.Log(_moveCoroutine);
-            
-            if(_moveCoroutine == null)
-            {
-                Debug.Log("why not stop?");
-            }
-        }
-        
-
-    }
 
     IEnumerator StartAnimation(string paramName)
     {
-        GetAnimator().SetBool("IsWalk", true);
+        GetAnimator().SetBool(paramName, true);
         yield return null;        
     }
 
     IEnumerator StopAnimation(string paramName)
     {
-        GetAnimator().SetBool("IsWalk", false);
+        GetAnimator().SetBool(paramName, false);
         yield return null;
     }
 }

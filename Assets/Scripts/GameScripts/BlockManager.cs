@@ -31,9 +31,14 @@ public class BlockManager : MonoBehaviour
     private Vector3 _spawnPos;
     private Vector3 _holdPos;
     private Vector3 _nextPos;
+
+    private PlayerInput _playerInput;
     
     private void Start()
     {
+        _playerInput = GetComponent<PlayerInput>();
+        _playerInput.actions.FindActionMap("Block").Enable();
+        
         _collidersDict = new Dictionary<int, Collider[]>();
         _blockQueue = new Queue<Block>();
         _blockFactory = blockFactoryObj.GetComponent<BlockFactory>();

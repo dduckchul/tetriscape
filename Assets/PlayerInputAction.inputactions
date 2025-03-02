@@ -1,8 +1,8 @@
 {
-    "name": "New Controls",
+    "name": "PlayerInputAction",
     "maps": [
         {
-            "name": "PlayerControl",
+            "name": "Player",
             "id": "5c56b889-8f2a-4581-98e4-c00f1c660349",
             "actions": [
                 {
