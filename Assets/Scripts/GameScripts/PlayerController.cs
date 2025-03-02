@@ -15,10 +15,12 @@ public class PlayerController : MonoBehaviour
     private Animator _3dAnimator;
     
     private Coroutine _moveCoroutine;
+    private PlayerInput _playerInput;
     
     public float moveSpeed = 1.0f;
-    private PlayerInput _playerInput;
-
+    public GameManager gameManager;
+    public Rigidbody rigidbody;
+    
     private void Awake()
     {
         _isTwoDemensional = true;
@@ -47,14 +49,9 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        Vector2 moveInput = ctx.ReadValue<Vector2>();
-        
-        if (moveInput.y > 0)
-        {
-            return;
-        }
-        
-        Vector3 moveVector = new Vector3(moveInput.x, 0, 0);
+        float moveInput = ctx.ReadValue<float>();
+
+        Vector3 moveVector = new Vector3(moveInput, 0, 0);
         if (_moveCoroutine == null)
         {
             _moveCoroutine = StartCoroutine(MovePlayer(moveVector));  
@@ -72,12 +69,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnJump()
+    public void OnJump(InputAction.CallbackContext ctx)
     {
         
     }
 
-    public void OnHold()
+    public void OnHold(InputAction.CallbackContext ctx)
     {
         
     }
@@ -87,7 +84,8 @@ public class PlayerController : MonoBehaviour
         Block block = other.gameObject.GetComponent<Block>();
         if (block?.isCurrent == true)
         {
-            Debug.Log("Game Over");
+            block.isCurrent = false;
+            StartCoroutine(gameManager.GameOverByPlayer(block));
         }
     }
 

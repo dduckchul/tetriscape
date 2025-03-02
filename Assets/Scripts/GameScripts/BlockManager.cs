@@ -20,34 +20,39 @@ public class BlockManager : MonoBehaviour
     public GameObject blockParent;
     private BlockFactory _blockFactory;
     private Collider _deadZoneCollider;
-    public GameObject[] environments;
     
     [Header("게임 진행 설정")]
     // block 떨어지는 속도 조절
     public float fallSpeed = 0.015f;
     // 스왑 한번만 쓰도록 bool값으로 제어
-    private bool _useSwap = false;
+    private bool _useSwap;
     
     private Vector3 _spawnPos;
     private Vector3 _holdPos;
     private Vector3 _nextPos;
-
-    private PlayerInput _playerInput;
     
-    private void Start()
+    private GameManager _gameManager;
+    private PlayerInput _playerInput;
+
+    private void Awake()
     {
-        _playerInput = GetComponent<PlayerInput>();
+        _gameManager = GetComponent<GameManager>();
+        _playerInput = GetComponent<PlayerInput>();        
         _playerInput.actions.FindActionMap("Block").Enable();
         
         _collidersDict = new Dictionary<int, Collider[]>();
-        _blockQueue = new Queue<Block>();
+        _blockQueue = new Queue<Block>();        
+        _layerMask = LayerMask.GetMask("Blocks");        
+    }
+    private void Start()
+    { 
         _blockFactory = blockFactoryObj.GetComponent<BlockFactory>();
         _deadZoneCollider = deadZone.GetComponent<Collider>();
+      
         _spawnPos = new Vector3(0, blockFactoryObj.transform.position.y, 0);
         _holdPos = new Vector3(-10, 14, 0);
-        _nextPos = new Vector3(10, 14, 0);
-        _layerMask = LayerMask.GetMask("Blocks");
-
+        _nextPos = new Vector3(10, 14, 0);        
+        
         InitBlockQueue();
         Dequeue();
         
@@ -151,7 +156,7 @@ public class BlockManager : MonoBehaviour
         
         if (CheckToGameOver())
         {
-            StartCoroutine(GameOver());
+            StartCoroutine(_gameManager.GameOverByBlock());
             return;
         }
         
@@ -176,29 +181,6 @@ public class BlockManager : MonoBehaviour
         }
 
         return false;
-    }
-
-    // 게임 오버, 와장창!
-    IEnumerator GameOver()
-    {
-        foreach (GameObject env in environments)
-        {
-            Rigidbody rigid = env.GetComponent<Rigidbody>();
-            rigid.isKinematic = false;
-            rigid.useGravity = true;
-            rigid.constraints = RigidbodyConstraints.FreezePositionZ;
-        }
-
-        foreach (Rigidbody blockRigid in blockParent.GetComponentsInChildren<Rigidbody>())
-        {
-            blockRigid.isKinematic = false;
-            blockRigid.useGravity = true;   
-            blockRigid.constraints = RigidbodyConstraints.FreezePositionZ;
-        }
-        
-        environments[0].GetComponent<Rigidbody>().AddExplosionForce(100, Vector3.zero, 10, 10, ForceMode.Impulse);
-
-        yield return null;
     }
     
     // 지울 라인 확인하기, 자식이 없는 블록들 있으면 탐색 위해 디스트로이
