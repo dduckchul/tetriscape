@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private Coroutine _gameOverCor;
     private bool _pressRestart;
 
-    private Quaternion _day = Quaternion.Euler(70, 0, 0);
+    private Quaternion _day = Quaternion.Euler(140, 0, 0);
     private Quaternion _night = Quaternion.Euler(200, 0, 0);
     
     private void Awake()
