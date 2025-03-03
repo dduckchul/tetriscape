@@ -40,7 +40,7 @@ public class SceneChanger : MonoBehaviour
         asyncOp.allowSceneActivation = true;
     }
 
-    IEnumerator FadeIn()
+    public IEnumerator FadeIn()
     {
         // 타이틀은 FadeIn 예외
         if (SceneManager.GetActiveScene().name.Equals(SceneEnum.TitleScene.ToString()))
@@ -63,7 +63,7 @@ public class SceneChanger : MonoBehaviour
         }
     }
 
-    IEnumerator FadeOut()
+    public IEnumerator FadeOut()
     {
         if (_screen is not null)
         {
