@@ -186,7 +186,7 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
         return false;
     }
 
-    // ToDo : 2D - 3D 간 색상 변경시 블록 색상 변경
+    // ToDo : 2D - 3D 간 색상 변경시 블록 색상 변경.. 필요할려나..?
     public void ChangeColor()
     {
 

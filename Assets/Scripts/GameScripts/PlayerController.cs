@@ -19,10 +19,12 @@ public class PlayerController : MonoBehaviour
     
     public float moveSpeed = 1.0f;
     public GameObject gameManager;
-    private GameManager _gameManager;
 
-    
+    private GameManager _gameManager;
     public Rigidbody rigidbody;
+
+    public bool isJumping;
+    public bool isControllable;
     
     private void Awake()
     {
@@ -54,6 +56,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
+        if (!isControllable)
+        {
+            return;
+        }
+        
         Vector2 moveInput = ctx.ReadValue<Vector2>();
         
         if (_isTwoDemensional)
@@ -84,7 +91,7 @@ public class PlayerController : MonoBehaviour
     
     public void ThreeDimensionalMove(Vector2 moveDir)
     {
-        Vector3 moveVector = new Vector3(moveDir.y, 0, moveDir.x).normalized;
+        Vector3 moveVector = new Vector3(moveDir.y, 0, -moveDir.x).normalized;
         
         if (_moveCoroutine == null)
         {
@@ -105,9 +112,19 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        
+        if (_isTwoDemensional || !isControllable)
+        {
+            return;
+        }
+
+        if (ctx.performed && !isJumping)
+        {
+            isJumping = true;
+            rigidbody.AddForce(Vector3.up * 5, ForceMode.Impulse);
+        }
     }
 
+    // ToDo : 블록 잡고 움직이기
     public void OnHold(InputAction.CallbackContext ctx)
     {
         
@@ -123,13 +140,13 @@ public class PlayerController : MonoBehaviour
             {
                 _2dPlayer.SetActive(true);
                 _3dPlayer.SetActive(false);
-                _gameManager.ChangeTo2D();                
+                StartCoroutine(_gameManager.ChangeTo2D()); 
             }
             else
             {
                 _2dPlayer.SetActive(false);
                 _3dPlayer.SetActive(true);
-                _gameManager.ChangeTo3D();
+                StartCoroutine(_gameManager.ChangeTo3D());
             }            
         }
     }    
@@ -142,11 +159,24 @@ public class PlayerController : MonoBehaviour
             block.isCurrent = false;
             StartCoroutine(_gameManager.GameOverByPlayer(block));
         }
+
+        if (block?.isFixed == true)
+        {
+            isJumping = false;
+        }
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
+        if (other.tag.Equals("Bottom"))
+        {
+            StartCoroutine(_gameManager.GameOverByPlayer(null));
+        }
+
+        if (other.tag.Equals("Goal"))
+        {
+            Debug.Log("Goal");
+        }
     }
 
     private Animator GetAnimator()
@@ -173,5 +203,12 @@ public class PlayerController : MonoBehaviour
     {
         GetAnimator().SetBool(paramName, false);
         yield return null;
+    }
+
+    public IEnumerator WaitUntilViewChanged()
+    {
+        isControllable = false;
+        yield return new WaitForSeconds(1f);
+        isControllable = true;
     }
 }

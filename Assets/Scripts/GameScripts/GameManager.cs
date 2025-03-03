@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     private Coroutine _gameOverCor;
     private bool _pressRestart;
 
+    private Quaternion _day = Quaternion.Euler(70, 0, 0);
+    private Quaternion _night = Quaternion.Euler(200, 0, 0);
+    
     private void Awake()
     {
         _sceneChanger = screen.GetComponent<SceneChanger>();
@@ -52,6 +55,8 @@ public class GameManager : MonoBehaviour
         {
             _gameOverText = gameOverTransform.GetComponent<TMP_Text>();
         }
+
+        StartCoroutine(_playerController.WaitUntilViewChanged());
     }
 
     public IEnumerator GameOverByBlock()
@@ -85,11 +90,14 @@ public class GameManager : MonoBehaviour
     public IEnumerator GameOverByPlayer(Block block)
     {
         _ui.SetActive(false);
-
-        block.StopAllCoroutines();
-        block.rigidBody.constraints = RigidbodyConstraints.None;
         _playerController.rigidbody.constraints = RigidbodyConstraints.None;
-        _playerController.rigidbody.AddExplosionForce(100, Vector3.zero, 10, 1, ForceMode.Impulse);;
+
+        if (block != null)
+        {
+            block.StopAllCoroutines();
+            block.rigidBody.constraints = RigidbodyConstraints.None;
+            _playerController.rigidbody.AddExplosionForce(100, Vector3.zero, 10, 1, ForceMode.Impulse);;            
+        }
         
         yield return new WaitForSeconds(1f);
 
@@ -127,21 +135,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /* 2D 모드 일때 할 것들 */
-    public void ChangeTo2D()
+    /* 2D 모드 변경하며 변경해 줄 것들 */
+    public IEnumerator ChangeTo2D()
     {
+        StartCoroutine(_playerController.WaitUntilViewChanged());
         _cinemachineManager?.Change2DView();
         _soundManager?.ChangeTo2DMusic();
-        _blockManager?.RenderBlocksTo2D();
-        directionLight.gameObject.SetActive(false);
+        _blockManager?.CurrentBlock.StartBlock(_blockManager.fallSpeed);
+        _ui.SetActive(true);
+
+        for(float t = 0; t < 1; t += Time.deltaTime)
+        {
+            directionLight.transform.rotation = Quaternion.Lerp(_day, _night, t);
+            yield return new WaitForFixedUpdate();
+        }
     }
 
-    /* 3D 모드 일때 할 것들 */
-    public void ChangeTo3D()
+    /* 3D 모드 변경하며 변경해 줄 것들 */
+    public IEnumerator ChangeTo3D()
     {
+        StartCoroutine(_playerController.WaitUntilViewChanged());
         _cinemachineManager?.Change3DView();
         _soundManager?.ChangeTo3DMusic();
-        _blockManager?.RenderBlocksTo3D();
-        directionLight.gameObject.SetActive(true);        
+        _blockManager?.CurrentBlock.StopBlock();
+        _ui.SetActive(false);
+        
+        for(float t = 0; t < 1; t += Time.deltaTime)
+        {
+            directionLight.transform.rotation = Quaternion.Lerp(_night, _day, t);
+            yield return new WaitForFixedUpdate();
+        }
     }
 }
