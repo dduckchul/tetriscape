@@ -18,14 +18,15 @@ public class GameManager : MonoBehaviour
     
     /* 게임 연관 컴포넌트들 찾기 */
     private CinemachineManager _cinemachineManager;
-    private SoundManager _soundManager;
     private BlockManager _blockManager;
     
     public GameObject player;
     private PlayerController _playerController;
+    public SoundManager soundManager;
     
     private Coroutine _gameOverCor;
     private bool _pressRestart;
+    private bool _isGameOver;
 
     private Quaternion _day = Quaternion.Euler(140, 0, 0);
     private Quaternion _night = Quaternion.Euler(200, 0, 0);
@@ -37,9 +38,9 @@ public class GameManager : MonoBehaviour
         
         _blockManager = gameObject.GetComponent<BlockManager>();
         _cinemachineManager = gameObject.GetComponent<CinemachineManager>();
-        _soundManager = gameObject.GetComponent<SoundManager>();
     }
     
+    // 게임 매니저가 실행시키는 것들
     private void Start()
     {
         // UI 다 끌것들 체크
@@ -56,11 +57,22 @@ public class GameManager : MonoBehaviour
             _gameOverText = gameOverTransform.GetComponent<TMP_Text>();
         }
 
+        soundManager.PlayBgm();
         StartCoroutine(_playerController.WaitUntilViewChanged());
     }
 
     public IEnumerator GameOverByBlock()
     {
+        if (_isGameOver)
+        {
+            yield break;
+        }
+        
+        _isGameOver = true;
+        _ui.SetActive(false);
+        soundManager.StopStageBgm();
+        soundManager.Play("GameOver");
+        
         foreach (GameObject env in environments)
         {
             Rigidbody rigid = env.GetComponent<Rigidbody>();
@@ -79,7 +91,7 @@ public class GameManager : MonoBehaviour
         _playerController.rigidbody.constraints = RigidbodyConstraints.None;
         environments[0].GetComponent<Rigidbody>().AddExplosionForce(100, Vector3.zero, 10, 10, ForceMode.Impulse);
 
-        _ui.SetActive(false);
+
         yield return new WaitForSeconds(1f);
 
         StartCoroutine(_sceneChanger.Loading(SceneEnum.MainScene));                
@@ -89,7 +101,15 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameOverByPlayer(Block block)
     {
+        if (_isGameOver)
+        {
+            yield break;
+        }
+        
+        _isGameOver = true;
         _ui.SetActive(false);
+        soundManager.StopStageBgm();
+        soundManager.Play("GameOver");
         _playerController.rigidbody.constraints = RigidbodyConstraints.None;
 
         if (block != null)
@@ -140,7 +160,7 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(_playerController.WaitUntilViewChanged());
         _cinemachineManager?.Change2DView();
-        _soundManager?.ChangeTo2DMusic();
+        soundManager?.ChangeTo2DMusic();
         _blockManager?.CurrentBlock.StartBlock(_blockManager.fallSpeed);
         _ui.SetActive(true);
 
@@ -156,7 +176,7 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(_playerController.WaitUntilViewChanged());
         _cinemachineManager?.Change3DView();
-        _soundManager?.ChangeTo3DMusic();
+        soundManager?.ChangeTo3DMusic();
         _blockManager?.CurrentBlock.StopBlock();
         _ui.SetActive(false);
         

@@ -20,6 +20,7 @@ public class TitleManager : MonoBehaviour
     private bool _isLoading = false;
     
     public float skyChangeTime = 0.1f;
+    public SoundManager _soundManager;
     
     [Header("타이틀 설정")]
     public TMP_Text titleText;
@@ -69,6 +70,8 @@ public class TitleManager : MonoBehaviour
         {
             _changeToNightCorountine = StartCoroutine(ChangeToNight());
         }
+        
+        _soundManager.Play("Title");
     }
 
     // 밤으로 바꾸는 연출, 포문 돌면서 정해진 색상으로 바꿔준다
@@ -183,6 +186,8 @@ public class TitleManager : MonoBehaviour
 
     private void GameStart()
     {
+        _soundManager.Stop("Title");
+        _soundManager.Play("GameStart");
         StartCoroutine(_sceneChanger.Loading(SceneEnum.MainScene));
         StartCoroutine(ChangeToDay());
         StartCoroutine(ActiveAruru());
