@@ -120,4 +120,9 @@ public class SoundManager : MonoBehaviour
         s.source.pitch = s.pitch;
         s.source.loop = s.loop;
     }
+
+    public Sound GetSound(string name)
+    {
+        return Array.Find(sounds, sound => sound.name == name);
+    }
 }

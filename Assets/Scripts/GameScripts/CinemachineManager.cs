@@ -7,7 +7,7 @@ public class CinemachineManager : MonoBehaviour
     private Camera _blockCamera;
 
     public CinemachineClearShot clearShot;
-    public CinemachineVirtualCamera virtualCamera;
+    public CinemachineVirtualCamera ceremonyCamera;
     
     int _blockLayerMask = 7;
     
@@ -33,5 +33,13 @@ public class CinemachineManager : MonoBehaviour
         _camera.orthographic = false;
         _camera.cullingMask |= (1 << _blockLayerMask);
         _blockCamera.gameObject.SetActive(false);
+    }
+
+    public void ChangeToCeremony()
+    {
+        ceremonyCamera.Priority = 12;
+        _camera.orthographic = false;
+        _camera.cullingMask |= (1 << _blockLayerMask);
+        _blockCamera.gameObject.SetActive(false);        
     }
 }

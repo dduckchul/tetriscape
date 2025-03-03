@@ -189,6 +189,7 @@ public class BlockManager : MonoBehaviour
     private void CheckToRemoveLine()
     {
         _collidersDict.Clear();
+        
         for (int i = 0; i < CurrentBlock.transform.childCount; i++)
         {
             Transform child = CurrentBlock.transform.GetChild(i);

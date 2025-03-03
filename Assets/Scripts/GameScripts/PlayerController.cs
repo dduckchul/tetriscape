@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     private Animator _2dAnimator;
     private Animator _3dAnimator;
+    private RigBuilder _rigBuilder;
     
     private Coroutine _moveCoroutine;
     private PlayerInput _playerInput;
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         _playerInput.actions.FindActionMap("Player").Enable();
         
         _gameManager = gameManager.GetComponent<GameManager>();
+        _rigBuilder = _3dPlayer.GetComponent<RigBuilder>();
     }
 
     public void OnMove(InputAction.CallbackContext ctx)
@@ -175,7 +178,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.tag.Equals("Goal"))
         {
-            Debug.Log("Goal");
+            StartCoroutine(_gameManager.ToNextStage());
         }
     }
 
@@ -210,5 +213,33 @@ public class PlayerController : MonoBehaviour
         isControllable = false;
         yield return new WaitForSeconds(1f);
         isControllable = true;
+    }
+
+    public void PlayCeremony()
+    {
+        _isTwoDemensional = false;
+        _2dPlayer.SetActive(false);
+        _3dPlayer.SetActive(true);
+        
+        foreach(RigLayer layer in _rigBuilder.layers)
+        {
+            if (layer.name.Equals("SpineRig") || layer.name.Equals("ArmRig"))
+            {
+                layer.active = true;
+            }
+        }
+        
+        _3dAnimator.SetLayerWeight(_3dAnimator.GetLayerIndex("Lower_Dance"),1);
+        StartCoroutine(StartAnimation("IsWin"));
+        StartCoroutine(RotatePlayer());
+    }
+
+    IEnumerator RotatePlayer()
+    {
+        while (true)
+        {
+            _3dPlayer.transform.Rotate(Vector3.down, 90);
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,12 +29,15 @@ public class GameManager : MonoBehaviour
     private Coroutine _gameOverCor;
     private bool _pressRestart;
     private bool _isGameOver;
+    private int _currentStage;
 
     private Quaternion _day = Quaternion.Euler(140, 0, 0);
     private Quaternion _night = Quaternion.Euler(200, 0, 0);
     
     private void Awake()
     {
+        SceneEnum scene = (SceneEnum)Enum.Parse(typeof(SceneEnum), SceneManager.GetActiveScene().name);
+        _currentStage = (int)scene;
         _sceneChanger = screen.GetComponent<SceneChanger>();
         _playerController = player.GetComponent<PlayerController>();        
         
@@ -69,7 +74,7 @@ public class GameManager : MonoBehaviour
         }
         
         _isGameOver = true;
-        _ui.SetActive(false);
+        _ui?.SetActive(false);
         soundManager.StopStageBgm();
         soundManager.Play("GameOver");
         
@@ -94,7 +99,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        StartCoroutine(_sceneChanger.Loading(SceneEnum.MainScene));                
+        StartCoroutine(_sceneChanger.Loading((SceneEnum)_currentStage));                
         StartCoroutine(_sceneChanger.FadeOut());
         StartCoroutine(WaitUntilSceneLoadFinished());
     }
@@ -107,7 +112,7 @@ public class GameManager : MonoBehaviour
         }
         
         _isGameOver = true;
-        _ui.SetActive(false);
+        _ui?.SetActive(false);
         soundManager.StopStageBgm();
         soundManager.Play("GameOver");
         _playerController.rigidbody.constraints = RigidbodyConstraints.None;
@@ -121,7 +126,7 @@ public class GameManager : MonoBehaviour
         
         yield return new WaitForSeconds(1f);
 
-        StartCoroutine(_sceneChanger.Loading(SceneEnum.MainScene));
+        StartCoroutine(_sceneChanger.Loading((SceneEnum)_currentStage));
         StartCoroutine(_sceneChanger.FadeOut());
         StartCoroutine(WaitUntilSceneLoadFinished());
     }
@@ -162,7 +167,7 @@ public class GameManager : MonoBehaviour
         _cinemachineManager?.Change2DView();
         soundManager?.ChangeTo2DMusic();
         _blockManager?.CurrentBlock.StartBlock(_blockManager.fallSpeed);
-        _ui.SetActive(true);
+        _ui?.SetActive(true);
 
         for(float t = 0; t < 1; t += Time.deltaTime)
         {
@@ -178,12 +183,41 @@ public class GameManager : MonoBehaviour
         _cinemachineManager?.Change3DView();
         soundManager?.ChangeTo3DMusic();
         _blockManager?.CurrentBlock.StopBlock();
-        _ui.SetActive(false);
+        _ui?.SetActive(false);
         
         for(float t = 0; t < 1; t += Time.deltaTime)
         {
             directionLight.transform.rotation = Quaternion.Lerp(_night, _day, t);
             yield return new WaitForFixedUpdate();
         }
+    }
+
+    public IEnumerator ToNextStage()
+    {
+        _blockManager.CurrentBlock.StopBlock();
+        soundManager.StopStageBgm();
+        soundManager.Play("Clear");
+        
+        SceneEnum nextScene = (SceneEnum)_currentStage + 1;
+        
+        if (nextScene == SceneEnum.SceneEnd)
+        {
+            StartCoroutine(Ceremony());
+            yield break;
+        }
+        
+        StartCoroutine(_sceneChanger.Loading(nextScene));
+        StartCoroutine(_sceneChanger.FadeOut());
+        yield return new WaitUntil(() => _sceneChanger.asyncOp.progress >= 0.9f);
+        yield return new WaitUntil(() => soundManager.GetSound("Clear").source.isPlaying == false);
+        _sceneChanger.activateScene = true;
+    }
+
+    public IEnumerator Ceremony()
+    {
+        _cinemachineManager?.ChangeToCeremony();
+        yield return new WaitUntil(() => soundManager.GetSound("Clear").source.isPlaying == false);
+        soundManager.Play("Complete");
+        _playerController.PlayCeremony();
     }
 }

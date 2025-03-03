@@ -188,7 +188,7 @@ public class TitleManager : MonoBehaviour
     {
         _soundManager.Stop("Title");
         _soundManager.Play("GameStart");
-        StartCoroutine(_sceneChanger.Loading(SceneEnum.MainScene));
+        StartCoroutine(_sceneChanger.Loading(SceneEnum.Stage1));
         StartCoroutine(ChangeToDay());
         StartCoroutine(ActiveAruru());
     }

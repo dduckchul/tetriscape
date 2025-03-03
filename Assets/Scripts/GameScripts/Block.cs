@@ -191,6 +191,16 @@ public class Block : MonoBehaviour, IMoveable, IRotatable, IColorable
     {
 
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag.Equals("Bottom"))
+        {
+            StopBlock();
+            ToIntPosition();
+            OnBlockFinished();
+        }
+    }
     
     // 충돌 이벤트 감지
     private void OnCollisionEnter(Collision other)
