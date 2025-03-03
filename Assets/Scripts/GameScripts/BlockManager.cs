@@ -266,6 +266,16 @@ public class BlockManager : MonoBehaviour
         }
         yield return new WaitForSeconds(0.1f);
     }
+
+    public void RenderBlocksTo2D()
+    {
+        Debug.Log("Render Blocks To 2D");
+    }
+
+    public void RenderBlocksTo3D()
+    {
+        Debug.Log("Render Blocks To 3D");
+    }
     
     // 디버그용 기즈모 그리기
     private void OnDrawGizmos()

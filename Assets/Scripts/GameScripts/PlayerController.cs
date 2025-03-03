@@ -18,7 +18,10 @@ public class PlayerController : MonoBehaviour
     private PlayerInput _playerInput;
     
     public float moveSpeed = 1.0f;
-    public GameManager gameManager;
+    public GameObject gameManager;
+    private GameManager _gameManager;
+
+    
     public Rigidbody rigidbody;
     
     private void Awake()
@@ -45,18 +48,49 @@ public class PlayerController : MonoBehaviour
         
         _playerInput = GetComponent<PlayerInput>();
         _playerInput.actions.FindActionMap("Player").Enable();
+        
+        _gameManager = gameManager.GetComponent<GameManager>();
     }
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        float moveInput = ctx.ReadValue<float>();
+        Vector2 moveInput = ctx.ReadValue<Vector2>();
+        
+        if (_isTwoDemensional)
+        {
+            TwoDimensionalMove(moveInput);
+        }
+        else
+        {
+            ThreeDimensionalMove(moveInput);
+        }
+    }
 
-        Vector3 moveVector = new Vector3(moveInput, 0, 0);
+    public void TwoDimensionalMove(Vector2 moveDir)
+    {
+        if (Mathf.Abs(moveDir.y) > 0)
+        {
+            return;
+        }
+        
+        Vector3 moveVector = new Vector3(moveDir.x, 0, 0).normalized;
+        
         if (_moveCoroutine == null)
         {
             _moveCoroutine = StartCoroutine(MovePlayer(moveVector));  
             StartCoroutine(StartAnimation("IsWalk"));
-        }
+        }        
+    }
+    
+    public void ThreeDimensionalMove(Vector2 moveDir)
+    {
+        Vector3 moveVector = new Vector3(moveDir.y, 0, moveDir.x).normalized;
+        
+        if (_moveCoroutine == null)
+        {
+            _moveCoroutine = StartCoroutine(MovePlayer(moveVector));  
+            StartCoroutine(StartAnimation("IsWalk"));
+        }        
     }
     
     public void OnMoveCanceled(InputAction.CallbackContext ctx)
@@ -78,6 +112,27 @@ public class PlayerController : MonoBehaviour
     {
         
     }
+    
+    public void OnChangeView(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            _isTwoDemensional = !_isTwoDemensional;
+
+            if (_isTwoDemensional)
+            {
+                _2dPlayer.SetActive(true);
+                _3dPlayer.SetActive(false);
+                _gameManager.ChangeTo2D();                
+            }
+            else
+            {
+                _2dPlayer.SetActive(false);
+                _3dPlayer.SetActive(true);
+                _gameManager.ChangeTo3D();
+            }            
+        }
+    }    
 
     public void OnCollisionEnter(Collision other)
     {
@@ -85,8 +140,13 @@ public class PlayerController : MonoBehaviour
         if (block?.isCurrent == true)
         {
             block.isCurrent = false;
-            StartCoroutine(gameManager.GameOverByPlayer(block));
+            StartCoroutine(_gameManager.GameOverByPlayer(block));
         }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.name);
     }
 
     private Animator GetAnimator()

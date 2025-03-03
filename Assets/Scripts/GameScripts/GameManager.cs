@@ -5,25 +5,40 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    /* 블록 환경 찾기 */
     public GameObject[] environments;
     public GameObject blockParent;
+    public Light directionLight;
 
+    /* UI 찾기 */ 
     public GameObject screen;
     private GameObject _ui;
     private TMP_Text _gameOverText;
     private SceneChanger _sceneChanger;
     
+    /* 게임 연관 컴포넌트들 찾기 */
+    private CinemachineManager _cinemachineManager;
+    private SoundManager _soundManager;
+    private BlockManager _blockManager;
+    
     public GameObject player;
     private PlayerController _playerController;
     
     private Coroutine _gameOverCor;
-    private bool _pressRestart;    
+    private bool _pressRestart;
+
+    private void Awake()
+    {
+        _sceneChanger = screen.GetComponent<SceneChanger>();
+        _playerController = player.GetComponent<PlayerController>();        
+        
+        _blockManager = gameObject.GetComponent<BlockManager>();
+        _cinemachineManager = gameObject.GetComponent<CinemachineManager>();
+        _soundManager = gameObject.GetComponent<SoundManager>();
+    }
     
     private void Start()
     {
-        _sceneChanger = screen.GetComponent<SceneChanger>();
-        _playerController = player.GetComponent<PlayerController>();
-
         // UI 다 끌것들 체크
         Transform uiTransform = screen.transform.parent.Find("UI");
         Transform gameOverTransform = screen.transform.parent.Find("GameOverText");
@@ -110,5 +125,23 @@ public class GameManager : MonoBehaviour
             _gameOverText.color = new Color(_gameOverText.color.r, _gameOverText.color.g, _gameOverText.color.b, t);
             yield return new WaitForFixedUpdate();
         }
+    }
+
+    /* 2D 모드 일때 할 것들 */
+    public void ChangeTo2D()
+    {
+        _cinemachineManager?.Change2DView();
+        _soundManager?.ChangeTo2DMusic();
+        _blockManager?.RenderBlocksTo2D();
+        directionLight.gameObject.SetActive(false);
+    }
+
+    /* 3D 모드 일때 할 것들 */
+    public void ChangeTo3D()
+    {
+        _cinemachineManager?.Change3DView();
+        _soundManager?.ChangeTo3DMusic();
+        _blockManager?.RenderBlocksTo3D();
+        directionLight.gameObject.SetActive(true);        
     }
 }
